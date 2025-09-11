@@ -1,13 +1,94 @@
 class Academia {
-    private var nome: String
-    private var alunosMatriculados: [String: Aluno]
-    private var instrutoresContratados: [String: Instrutor]
-    private var aparelhos: [Aparelho]
-    private var aulasDisponiveis: [Aula]
+    private let nome: String
+    private var alunosMatriculados: [String: Aluno] = [:] // Chave: matricula do aluno
+    private var instrutoresContratados: [String: Instrutor] = [:] // Chave: email do instrutor
+    private var aparelhos: [Aparelho] = []
+    private var aulasDisponiveis: [Aula] = []
 
-    init(nome: String) {
+    init(nome: String,
+    alunosMatriculados: [String: Aluno],
+    instrutoresContratados: [String: Instrutor],
+    aparelhos: [Aparelho],
+    aulasDisponiveis: [Aula]) {
         self.nome = nome
+        self.alunosMatriculados = alunosMatriculados
+        self.instrutoresContratados = instrutoresContratados
+        self.aparelhos = aparelhos
+        self.aulasDisponiveis = aulasDisponiveis
     }
+
+    func adicionarAparelho(_ aparelho: Aparelho) {
+        self.aparelhos.append(aparelho)
+    }
+
+    func adicionarAula(_ aula: Aula) {
+        self.aulasDisponiveis.append(aula)
+    }
+
+    func contratarInstrutor(_ instrutor: Instrutor) {
+        self.instrutoresContratados[instrutor.email] = instrutor
+    }
+
+    func matricularAluno(_ aluno: Aluno) {
+        if alunosMatriculados[aluno.matricula] != nil {
+            print("Aluno \(aluno.nome) já está matriculado.")
+            return
+        }
+        alunosMatriculados[aluno.matricula] = aluno
+        print("Aluno \(aluno.nome) matriculado com sucesso.")
+    }
+
+    func matricularAluno(nome: String, email: String, matricula: String, nivel: NivelAluno, plano: Plano) -> Aluno {
+        let novoAluno = Aluno(nome: nome, email: email, matricula: matricula, nivel: nivel, plano: plano)
+        matricularAluno(novoAluno)
+        return novoAluno
+    }
+    
+    func buscarAluno(porMatricula matricula: String) -> Aluno? {
+        
+        return alunosMatriculados[matricula]
+    
+    }
+
+    func listarAlunos() {
+        print("--- Lista de Alunos Matriculados ---")
+        
+        if (alunosMatriculados.count == 0) {
+
+            print("Nenhum Aluno matriculado\n")
+            
+
+        }
+        else {
+            let ordenado = alunosMatriculados.sorted(by: { $0.value.nome < $1.value.nome } )
+
+            for i in ordenado{
+                print(i)
+                print(i.value.getDescricao())
+                print()
+            }
+
+        }
+        print("\n-----------------")
+        
+    }
+
+    func listarAulas() {
+        print("--- Lista de Aulas ---")
+        if (aulasDisponiveis.count == 0) {
+            print("Sem Aulas")
+            
+        } 
+        else {
+            for i in aulasDisponiveis{
+                print(i.getDescricao())
+            }
+
+        }
+        print("\n-----------------")
+        
+    }
+
 
 
 }
